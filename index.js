@@ -5,7 +5,6 @@ if (process.env.NODE_ENV !== "production") {
 const express = require('express');
 const path = require('path');
 const app = express();
-const mongoose = require('mongoose');
 const override = require('method-override');
 const ejsMate = require('ejs-mate');
 const AppError = require('./util/error');
@@ -19,15 +18,16 @@ const reviewRoute = require('./routes/review');
 const userRoute = require('./routes/user');
 const campgroundRoute = require('./routes/campground');
 const session = require('express-session');
+const mongoose = require('mongoose');
 const MongoStore = require('connect-mongo');
 
 main().catch(err => console.log(err));
 
-const dbUrl = process.env.DB_URL||'mongodb://localhost:27017/yelp-camp';
+// const dbUrl = process.env.DB_URL||'mongodb://localhost:27017/yelp-camp';
 const secret = process.env.SECRET;
 
 async function main() {
-    await mongoose.connect(dbUrl);
+    await mongoose.connect(process.env.DB_URL||'mongodb://localhost:27017/yelp-camp');
 }
 
 const db = mongoose.connection;
@@ -47,7 +47,7 @@ app.use(mongoSanitize({
 }));
 
 const store = MongoStore.create({
-    mongoUrl: dbUrl,
+    mongoUrl: process.env.DB_URL||'mongodb://localhost:27017/yelp-camp',
     secret,
     touchAfter: 24*3600
 });
@@ -162,6 +162,8 @@ app.use((err, req, res, next) => {
     res.status(status).render('error', { err });
 });
 
-app.listen(3000, () => {
-    console.log('listening...');
+const port = process.env.PORT||3000;
+
+app.listen(port, () => {
+    console.log(`listening to port ${port}`);
 })
