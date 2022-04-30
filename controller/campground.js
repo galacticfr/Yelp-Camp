@@ -3,12 +3,13 @@ const campGround = require('../model/campground');
 const mbxGeocoding = require("@mapbox/mapbox-sdk/services/geocoding");
 const mapboxToken = process.env.MAP_TOKEN;
 const geocoder = mbxGeocoding({ accessToken: mapboxToken });
+
 module.exports.index = async (req, res) => {
     const camp = await campGround.find({});
     res.render('campground/index', { camp })
 };
 
-module.exports.login = (req, res) => {
+module.exports.renderNew = (req, res) => {
     res.render('campground/new');
 }
 
@@ -24,7 +25,6 @@ module.exports.makeCamp = async (req, res, next) => {
     newCamp.author = req.user._id;
     await newCamp.save();
     req.flash('success', 'Created Successfully!');
-    console.log(newCamp);
     res.redirect(`/campground/${newCamp._id}`);
 };
 
@@ -43,6 +43,10 @@ module.exports.detail = async (req, res) => {
 module.exports.renderEdit = async (req, res) => {
     const { id } = req.params;
     const camp = await campGround.findById(id);
+    if (!camp) {
+        req.flash('err', 'Oops! Campground not found ...');
+        return res.redirect('/campground');
+    }
     res.render('campground/edit', { camp })
 };
 
@@ -57,14 +61,6 @@ module.exports.update = async (req, res) => {
         }
         await camp.updateOne({ $pull: { image: { filename: { $in: req.body.deleteImage } } } });
     }
-    //??????
-    // let camp = await campGround.findById(req.params.id);
-    // let update = req.body.camp;
-    // update.image = camp.image;
-    // const img = req.files.map(f => ({ url: f.path, filename: f.filename }));
-    // update.image.push(...img);
-    // await campGround.updateOne(req.params.id, update);
-    //?????
     req.flash('success', 'Update Successfully!');
     res.redirect(`/campground/${camp._id}`);
 };

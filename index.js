@@ -27,7 +27,7 @@ main().catch(err => console.log(err));
 const secret = process.env.SECRET;
 
 async function main() {
-    await mongoose.connect(process.env.DB_URL||'mongodb://localhost:27017/yelp-camp');
+    await mongoose.connect('mongodb://localhost:27017/yelp-camp');
 }
 
 const db = mongoose.connection;
@@ -47,7 +47,7 @@ app.use(mongoSanitize({
 }));
 
 const store = MongoStore.create({
-    mongoUrl: process.env.DB_URL||'mongodb://localhost:27017/yelp-camp',
+    mongoUrl: 'mongodb://localhost:27017/yelp-camp',
     secret,
     touchAfter: 24*3600
 });
@@ -61,7 +61,7 @@ const sessionConfig = {
     name: 'session',
     secret,
     resave: false,
-    saveUninitialized: true,
+    saveUninitialized: false,
     cookie: {
         httpOnly: true,
         //can only be accessed by http, not js

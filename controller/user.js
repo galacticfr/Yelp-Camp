@@ -4,7 +4,7 @@ module.exports.renderSignup = (req, res) => {
     res.render('user/register');
 };
 
-module.exports.signup = async (req, res) => {
+module.exports.signup = async (req, res, next) => {
     try {
         const { username, email, password } = req.body;
         const user = new User({ email, username });
@@ -33,5 +33,6 @@ module.exports.login = (req, res) => {
 
 module.exports.logout = (req, res) => {
     req.logout();
+    req.flash('success', 'You have logged out!');
     res.redirect('/campground');
 };

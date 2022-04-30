@@ -11,7 +11,7 @@ router.route('/')
     .get(wrapAsync(campgr.index))
     .post(isLoggedin, upload.array('camp[image]'), validateCamp, wrapAsync(campgr.makeCamp));
 
-router.get('/new', isLoggedin, campgr.login);
+router.get('/new', isLoggedin, campgr.renderNew);
 
 router.route('/:id')
     .get(wrapAsync(campgr.detail))

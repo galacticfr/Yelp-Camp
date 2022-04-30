@@ -6,8 +6,8 @@ module.exports.new = async (req, res) => {
     const review = new Review(req.body.review);
     review.author = req.user._id;
     campground.review.push(review);
-    await campground.save();
     await review.save();
+    await campground.save();
     req.flash('success', 'Your review is live!');
     res.redirect(`/campground/${campground._id}`);
 };

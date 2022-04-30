@@ -1,8 +1,6 @@
 const BaseJoi = require('joi');
 const sanitizeHtml = require('sanitize-html');
 
-
-
 const extension = (joi) => ({
     type: 'string',
     base: joi.string(),
@@ -25,8 +23,8 @@ const extension = (joi) => ({
 
 const Joi = BaseJoi.extend(extension)
 
-module.exports.campSchema = Joi.object({
-    campground: Joi.object({
+module.exports.campgroundSchema = Joi.object({
+    camp: Joi.object({
         title: Joi.string().required().escapeHTML(),
         price: Joi.number().required().min(0),
         location: Joi.string().required().escapeHTML(),

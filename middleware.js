@@ -1,8 +1,7 @@
 const campGround = require('./model/campground');
-const { campSchema } = require('./validate.js');
-const AppError = require('./util/error');
-const { reviewSchema } = require('./validate.js');
 const Review = require('./model/review');
+const AppError = require('./util/error');
+const { reviewSchema, campgroundSchema } = require('./validate.js');
 
 module.exports.isLoggedin = (req, res, next) => {
     if (!req.isAuthenticated()) {
@@ -33,7 +32,7 @@ module.exports.isAuthorR = async (req, res, next) => {
 }
 
 module.exports.validateCamp = (req, res, next) => {
-    const { error } = campSchema.validate(req.body);
+    const { error } = campgroundSchema.validate(req.body);
     if (error) {
         const msg = error.details.map(e => e.message).join(',');
         throw new AppError(msg, 400)
