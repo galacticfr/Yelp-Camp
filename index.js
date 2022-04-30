@@ -27,7 +27,7 @@ main().catch(err => console.log(err));
 const secret = process.env.SECRET;
 
 async function main() {
-    await mongoose.connect('mongodb://localhost:27017/yelp-camp');
+    await mongoose.connect(process.env.DB_URL);
 }
 
 const db = mongoose.connection;
@@ -47,7 +47,7 @@ app.use(mongoSanitize({
 }));
 
 const store = MongoStore.create({
-    mongoUrl: 'mongodb://localhost:27017/yelp-camp',
+    mongoUrl: process.env.DB_URL,
     secret,
     touchAfter: 24*3600
 });
